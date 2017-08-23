@@ -1,0 +1,79 @@
+#include<iostream>
+#include<cstring>
+#include<cstdio>
+#include<cmath>
+#include<set>
+#include<map>
+#include<algorithm>
+using namespace std;
+typedef long long LL;
+set<pair<int,int> >S;
+const int N=505,M=100000007;
+int n,T,b,k,x[N],y[N];
+LL r;
+LL P(LL x,LL y){
+	if(y==0)	return 1ll;
+	LL tmp=1ll;
+	for(;y;y>>=1ll){
+		if(y&1)	tmp=tmp*x%M;
+		x=x*x%M;
+	}
+	return tmp;
+}
+void gcd(LL a,LL b,LL &d,LL &x,LL &y){
+	if(!b)	{d=a;x=1ll;y=0ll;return;}
+	gcd(b,a%b,d,y,x),y-=x*(a/b);
+}
+LL inv(LL a){
+	LL d,x,y;
+	gcd(a,M,d,x,y);
+	return d==1?(x+M)%M:-1;
+}
+int bsgs(int a,int b){
+	int m;
+	LL e=1ll,v;
+	m=(int)sqrt(M+0.5);
+	v=inv(P(a,m));
+	map<int,int>x;
+	x[1]=0;
+	for(int i=1;i<m;++i){
+		e=e*a%M;
+		if(!x.count(e))	x[e]=i;
+	}
+	for(int i=0;i<m;++i){
+		if(x.count(b))	return i*m+x[b];
+		b=v*b%M;
+	}
+	return -1;
+}
+int solve(int m){
+	int c=n;
+	for(int i=0;i<b;++i){
+		if(x[i]!=m && !S.count(make_pair(x[i]+1,y[i])))	c++;
+		if(x[i]==1)	c--;
+	}
+	int tmp=P(k,c)*P(k-1,(LL)m*n-b-c)%M;
+	if(tmp==r)	return m;
+	c=0;
+	for(int i=0;i<b;++i)	if(x[i]==m)	c++;
+	m++;
+	tmp=P(k,c)*P(k-1,n-c)%M*tmp%M;
+	if(tmp==r)	return m;
+	return bsgs(P(k-1,n),r*inv(tmp)%M)+m;
+}	
+int main(){
+	scanf("%d",&T);
+	for(int tt=1;tt<=T;++tt){
+		printf("Case %d: ",tt);
+		scanf("%d%d%d%lld",&n,&k,&b,&r);
+		S.clear();
+		int m=1;
+		for(int i=0;i<b;++i){
+			scanf("%d%d",&x[i],&y[i]);
+			m=max(x[i],m);
+			S.insert(make_pair(x[i],y[i]));
+		}
+		printf("%d\n",solve(m));
+	}
+	return 0;
+}
