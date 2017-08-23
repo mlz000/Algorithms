@@ -1,0 +1,23 @@
+﻿
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch master
+# Your branch is up-to-date with 'origin/master'.
+#
+# Changes to be committed:
+#	new file:   srm531/300.cpp
+#	new file:   srm532/300.cpp
+#	new file:   srm532/450(Dp).cpp
+#	new file:   srm533/250.cpp
+#	new file:   srm533/500.cpp
+#	new file:   srm534/250.cpp
+#	new file:   srm534/500.cpp
+#	new file:   srm535/250.cpp
+#	new file:   srm535/500.cpp
+#	new file:   srm536/250.cpp
+#	new file:   srm536/500.cpp
+#	new file:   srm537/275.cpp
+#	new file:   srm601/500(dp).cpp
+#	new file:   srm660/250.cpp
+#
+
