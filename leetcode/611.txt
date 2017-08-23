@@ -1,0 +1,14 @@
+class Solution(object):
+    def triangleNumber(self, a):
+        ans, n = 0, len(a)
+        a = sorted(a, reverse = True)
+        for i in xrange(0, n - 2):
+            l = i + 1
+            r = n - 1
+            while r > l :
+                if a[l] + a[r] > a[i]:
+                    ans += r - l
+                    l += 1
+                else:   
+                    r -= 1
+        return ans
