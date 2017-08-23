@@ -1,0 +1,48 @@
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long LL;
+const int N = 200005;
+int a[N], b[205], f[2][205];
+bool g[205][205];
+int main() {
+	int T;
+	scanf("%d", &T);
+	while (T--) {
+		int m, q, n;
+		memset(g, 0, sizeof(g));
+		scanf("%d%d%d", &m, &q, &n);
+		for (int i = 1, x, y; i <= q; ++i) {
+			scanf("%d%d", &x, &y);
+			g[x][y] = g[y][x] = 1;
+		}
+		for (int i = 1; i <= m; ++i)	g[i][i] = 1;
+		for (int k = 1; k <= m; ++k)
+			for (int i = 1; i <= m; ++i)
+				for (int j = 1; j <= m; ++j)
+					g[i][j] |= g[i][k] & g[k][j];
+		int ans;
+		for (int i = 1; i <= n; ++i)	scanf("%d", &a[i]);
+		for (int i = 1; i <= n; ++i) {
+			for (int j = 1; j <= m; ++j)	f[i & 1][j] = 2000000;
+			if (i == 1) {
+				for (int j = 1; j <= m; ++j)
+					if (g[a[i]][j])	f[i & 1][j] = 1;
+				f[i & 1][a[i]] = 0;
+				for (int j = 1; j <= m; ++j)	f[i & 1][j + 1] = min(f[i & 1][j + 1], f[i & 1][j]);
+			}
+			else {
+				for (int j = 1; j <= m; ++j) {
+					if (j == a[i])	f[i & 1][j] = min(f[i & 1][j], f[(i - 1) & 1][j]);
+					if (g[a[i]][j]) {
+						f[i & 1][j] = min(f[i & 1][j], f[(i - 1) & 1][j] + 1);
+					}
+				}
+				for (int j = 1; j <= m; ++j)	f[i & 1][j + 1] = min(f[i & 1][j + 1], f[i & 1][j]);	
+		
+			}
+		}
+		if (f[n & 1][m] == 2000000)	f[n & 1][m] = -1;
+		printf("%d\n", f[n & 1][m]);
+	}
+	return 0;
+}
