@@ -1,29 +1,19 @@
-int ans;
-int dfs(TreeNode* rt) {
-    if (!rt) {
-        return 0;
-    }
-    int t1 = 0, t2 = 0, t = 0, now = 1;
-    if (rt -> left) {
-        t1 = dfs(rt -> left);
-        if (rt -> left -> val == rt -> val) t = max(t, t1);
-        else t1 = 0;
-    }
-    if (rt -> right) {
-        t2 = dfs(rt -> right);
-        if (rt -> right -> val == rt -> val)    t = max(t, t2);
-        else t2 = 0;
-    }
-    ans = max(ans, now + t1 + t2);
-    now += t;
-    return now;
-}
 class Solution {
 public:
+    int ans;
+    int dfs(TreeNode* rt) {
+        if (!rt)    return 0;
+        int a = dfs(rt -> left);
+        int b = dfs(rt -> right);
+        int t = 0, t2 = 0;
+        if (rt -> left && rt -> val == rt -> left -> val) t += a + 1, t2 =  a + 1;
+        if (rt -> right && rt -> val == rt -> right -> val)    t += b + 1, t2 = max(t2, b + 1);
+        ans = max(ans, t);
+        return t2;
+    }
     int longestUnivaluePath(TreeNode* root) {
-        ans = 1;
-        if (!root)  return 0;
+        ans = 0;
         dfs(root);
-        return ans - 1;
+        return ans;
     }
 };
