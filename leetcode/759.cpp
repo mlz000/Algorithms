@@ -1,20 +1,34 @@
+/**
+ * Definition for an interval.
+ * struct Interval {
+ *     int start;
+ *     int end;
+ *     Interval() : start(0), end(0) {}
+ *     Interval(int s, int e) : start(s), end(e) {}
+ * };
+ */
+const int inf = 1e9;
+#define F first
+#define S second
+#define mp make_pair
+#define pb push_back
 class Solution {
 public:
-    int intersectionSizeTwo(vector<vector<int>>& a) {
-        sort(a.begin(), a.end(), [](const vector<int> &p, const vector<int> &q){return p[1] < q[1];});
-        set<int> ans;
-        for (int i = 0; i < a.size(); ++i) {
-            auto it1 = ans.lower_bound(a[i][0]);
-            auto it2 = ans.upper_bound(a[i][1]);
-            int cnt = 0;
-            for (; it1 != it2; ++it1)
-                if ((*it1) >= a[i][0] && (*it1) <= a[i][1]) ++cnt;
-            int now = a[i][1];
-            while (cnt < 2) {
-                if (ans.find(now) == ans.end()) ans.insert(now), ++cnt;
-                --now;
-            }
+    vector<pair<int, int> > a;
+    vector<Interval> ans;
+    vector<Interval> employeeFreeTime(vector<vector<Interval>>& schedule) {
+        int n = schedule.size();
+        for (auto v : schedule) {
+            for (auto x : v)    a.pb(mp(x.start, x.end)); 
         }
-        return ans.size();
+        sort(a.begin(), a.end());
+        int last = -inf;
+        for (auto x : a) {
+            if (x.F > last) {
+                if (last != -inf)    ans.pb(Interval(last, x.F));
+            }
+            last = max(last, x.S);
+        }
+        return ans;
     }
 };
