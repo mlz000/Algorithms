@@ -1,40 +1,27 @@
 class Solution {
 public:
-    int l[101], r[101];
-    vector<int> pourWater(vector<int>& h, int V, int K) {
-        int n = h.size();
-        for (int i = 1; i <= V; ++i) {
-            int p = K;
-            ++h[p];
-            while (1) {
-                int p2 = -1, p3 = -1;
-                for (int j = p - 1; j >= 0; --j) {
-                    if (h[j] >= h[p])    break;
-                    else if (h[j] < h[p] - 1) {
-                        p2 = j;
-                        break;
+    int g[7][7][7];
+    bool pyramidTransition(string s, vector<string>& allowed) {
+        int n = s.size();
+        vector<int> a(n, 0), b(n, 0);
+        for (int i = 0; i < n; ++i) a[i] = 1 << (s[i] - 'A');
+        for (auto t : allowed) g[t[0] - 'A'][t[1] - 'A'][t[2] - 'A'] = 1;
+        for (int i = n - 1; i >= 0; --i) {
+            for (int j = 0; j <= i; ++j) 
+                if (!a[j])  return 0;
+            for (int j = 0; j < i; ++j) {
+                b[j] = 0;
+                for (int x = 0; x < 7; ++x) {
+                    if (!(a[j] >> x & 1))   continue;
+                    for (int y = 0; y < 7; ++y) {
+                        if (!(a[j + 1] >> y & 1))   continue;
+                        for (int z = 0; z < 7; ++z)
+                            if (g[x][y][z]) b[j] |= 1 << z;
                     }
                 }
-                if (p2 != -1) {
-                    ++h[p2];
-                    --h[p];
-                    p = p2;
-                }
-                for (int j = p + 1; j < n; ++j) {
-                    if (h[j] >= h[p])    break;
-                    else if (h[j] < h[p] - 1) {
-                        p3 = j;
-                        break;
-                    }
-                }
-                if (p2 == -1 && p3 != -1) {
-                    ++h[p3];
-                    --h[p];
-                    p = p3;
-                }
-                if (p2 == -1 && p3 == -1)   break;
             }
-        }
-        return h;
+            swap(a, b);
+        }   
+        return 1;
     }
 };

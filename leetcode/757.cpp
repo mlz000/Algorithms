@@ -1,27 +1,27 @@
 class Solution {
 public:
-    int g[7][7][7];
-    bool pyramidTransition(string s, vector<string>& allowed) {
-        int n = s.size();
-        vector<int> a(n, 0), b(n, 0);
-        for (int i = 0; i < n; ++i) a[i] = 1 << (s[i] - 'A');
-        for (auto t : allowed) g[t[0] - 'A'][t[1] - 'A'][t[2] - 'A'] = 1;
-        for (int i = n - 1; i >= 0; --i) {
-            for (int j = 0; j <= i; ++j) 
-                if (!a[j])  return 0;
-            for (int j = 0; j < i; ++j) {
-                b[j] = 0;
-                for (int x = 0; x < 7; ++x) {
-                    if (!(a[j] >> x & 1))   continue;
-                    for (int y = 0; y < 7; ++y) {
-                        if (!(a[j + 1] >> y & 1))   continue;
-                        for (int z = 0; z < 7; ++z)
-                            if (g[x][y][z]) b[j] |= 1 << z;
-                    }
+    string boldWords(vector<string>& words, string S) {
+        unordered_map<string, bool> G;
+        bool v[505];
+        memset(v, 0, sizeof(v));
+        for (auto s : words)    G[s] = 1;
+        string ans = "";
+        for (int i = 0; i < S.size(); ++i) {
+            for (int j = 1; i + j - 1 < S.size() && j <= 10; ++j)
+                if (G[S.substr(i, j)]) {
+                    for (int k = i; k < i + j; ++k) v[k] = 1;
                 }
+        }
+        int now = 0;
+        for (int i = 0; i <= S.size(); ++i) {
+            if (v[i]) {
+                if (!now)   ans += "<b>", now = 1;
             }
-            swap(a, b);
-        }   
-        return 1;
+            else if (i && v[i - 1]) {
+                if (now)    ans += "</b>", now = 0;
+            }
+            if (i < S.size())   ans += S[i];
+        }
+        return ans;
     }
 };
