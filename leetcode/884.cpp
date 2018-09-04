@@ -1,22 +1,14 @@
 class Solution {
 public:
-    string decodeAtIndex(string S, int K) {
-        int n = S.size();
-        int l = 0;
-        string now = "";
-        for (int i = 0; i < n; ++i) {
-            if (S[i] >= '2' && S[i] <= '9') {
-                int x = S[i] - '0';
-                if ((long long)l * x >= K) {
-                    return decodeAtIndex(S.substr(0, l), (K - 1) % l + 1);
-                }
-                l *= x;
-            }
-            else {
-                ++l;
-                now += S[i];
-                if (l == K) return string("") + S[i];
-            }
-        }
+    vector<string> uncommonFromSentences(string A, string B) {
+        vector<string> ans;
+        stringstream ss(A + " " + B);
+        unordered_map<string, int> mp;
+        string s;
+        while (ss >> s) ++mp[s];
+        for (auto& pair: mp)
+            if (pair.second == 1)
+                ans.push_back(pair.first);
+        return ans;
     }
 };

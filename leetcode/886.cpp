@@ -1,49 +1,19 @@
-#define F first
-#define S second
-#define pb push_back
-#define mp make_pair
-const int inf = 1e9;
-
 class Solution {
 public:
-    int reachableNodes(vector<vector<int>>& edges, int M, int N) {
-        priority_queue<pair<int, int> > pq;
-        vector<vector<pair<int, int> > > g(N + 1);
-        vector<int> dis(N + 1, inf);
-        vector<bool> vis(N + 1, 0);
-        for (auto e: edges) {
-            g[e[0]].pb(mp(e[2] + 1, e[1]));
-            g[e[1]].pb(mp(e[2] + 1, e[0]));
+    int f[4005];
+    int find(int x) {
+        return f[x] == x ? x : find(f[x]);
+    }
+    bool possibleBipartition(int N, vector<vector<int>>& dislikes) {
+        for (int i = 1; i <= N * 2; ++i)    f[i] = i;
+        for (auto e: dislikes) {
+            int x1 = e[0], y1 = e[1];
+            int x2 = x1 + N, y2 = y1 + N;
+            if (find(x1) == find(y1))   return 0;
+            if (find(x2) == find(y2))   return 0;
+            f[find(x1)] = f[find(y2)];
+            f[find(y1)] = f[find(x2)];
         }
-        dis[0] = 0;
-        pq.push(mp(0, 0));
-        while (pq.size()) {
-            int u = pq.top().S;
-            pq.pop();
-            if (vis[u]) continue;
-            vis[u] = 1;
-            for (auto p: g[u]) {
-                if (dis[u] + p.F < dis[p.S]) {
-                    dis[p.S] = dis[u] + p.F;
-                    pq.push(mp(-dis[p.S], p.S));
-                }
-            }
-        }
-        int ans = 0;
-        for (int i = 0; i < N; ++i)
-            ans += dis[i] <= M;
-        for (auto e: edges) {
-            int u = e[0], v = e[1], w = e[2];
-            int now = 0;
-            if (dis[u] < M) {
-                now += min(w, M - dis[u]);
-            }
-            if (dis[v] < M) {
-                now += min(w, M - dis[v]);
-            }
-            now = min(now, w);
-            ans += now;
-        }
-        return ans;
+        return 1;
     }
 };
