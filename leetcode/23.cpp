@@ -6,24 +6,29 @@
  *     ListNode(int x) : val(x), next(NULL) {}
  * };
  */
-#define mp make_pair
+struct cmp {
+    bool operator()(const ListNode* l, const ListNode* r) {
+        return l -> val > r -> val;
+    }
+};
 class Solution {
 public:
-    priority_queue<pair<int, ListNode*> >pq;
+    priority_queue<ListNode*, vector<ListNode*>, cmp >pq;
     ListNode* mergeKLists(vector<ListNode*>& a) {
         int n = a.size();
         for (int i = 0; i < n; ++i)
-            if (a[i]) pq.push(mp(-a[i] -> val, a[i]));
-        ListNode* head = new ListNode(-1), *now = new ListNode(-1);
-        head -> next = now;
+            if (a[i]) pq.push(a[i]);
+        if (!pq.size())  return NULL;
+        ListNode* head = pq.top();
+        pq.pop();
+        if (head -> next)   pq.push(head -> next);
+        ListNode *now = head;
         while(pq.size()) {
-            pair<int, ListNode*> t = pq.top();
+            now -> next = pq.top();
             pq.pop();
-            ListNode* tmp = new ListNode(-t.first);
-            now -> next = tmp;
             now = now -> next;
-            if (t.second -> next)   pq.push(mp(-t.second -> next -> val, t.second -> next));
+            if (now -> next)    pq.push(now -> next);
         }
-        return head -> next -> next;
+        return head;
     }
 };
