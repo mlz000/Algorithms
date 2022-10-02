@@ -1,8 +1,4 @@
-struct cmp {
-    bool operator()(pair<long long,int>& a, pair<long long,int>& b) {
-        return a.first > b.first;
-    }
-};
+typedef pair<long long, int> pli;
 class Solution {
 public:
     long long kSum(vector<int>& nums, int k) {
@@ -13,7 +9,7 @@ public:
         }
         if (k-- == 1) return sum;
         sort(nums.begin(), nums.end());
-        priority_queue<pair<long long, int>, vector<pair<long long, int>>, cmp> pq;
+        priority_queue<pli, vector<pli>, greater<pli>> pq;
         pq.push(make_pair(nums[0], 0));
         // pair(a, b) The last select element is nums[b], current sum = a
         // each time we have two choices, select b + 1, meantime select/not select b
